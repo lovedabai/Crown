@@ -31,11 +31,14 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.session.SqlSession;
 import org.crown.framework.mapper.BaseMapper;
 import org.crown.framework.model.convert.Convert;
 import org.crown.framework.service.BaseService;
+import org.crown.framework.utils.LogUtils;
 import org.mybatis.spring.SqlSessionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,6 +69,7 @@ import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
  * @author Caratacus
  */
 @Transactional(readOnly = true)
+@Slf4j
 public class BaseServiceImpl<M extends BaseMapper<T>, T extends Convert> implements BaseService<T> {
 
     @Autowired
@@ -321,6 +325,12 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends Convert> impleme
         Map<K, T> map = new LinkedHashMap<>(list.size());
         for (T t : list) {
             Field field = ReflectionUtils.findField(t.getClass(), getColumn(LambdaUtils.resolve(column)));
+            
+            log.info("SFunction="+column);
+            log.info("t.getClass()="+t.getClass());
+            log.info("LambdaUtils="+LambdaUtils.resolve(column));
+            log.info("getColumn="+getColumn(LambdaUtils.resolve(column)));
+            
             if (Objects.isNull(field)) {
                 continue;
             }

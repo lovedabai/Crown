@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.ibatis.binding.MapperMethod;
@@ -44,6 +45,7 @@ import com.baomidou.mybatisplus.core.toolkit.ArrayUtils;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 
 /**
  * <p>
@@ -88,7 +90,8 @@ public class ResourceServiceImpl extends BaseServiceImpl<ResourceMapper, Resourc
         if (CollectionUtils.isEmpty(entityList)) {
             return true;
         }
-        Map<String, Resource> resourceMap = list2Map(Resource::getId);
+        SFunction<Resource, String> r = (Resource::getId);
+        Map<String, Resource> resourceMap = list2Map(r);
         int i = 0;
         try (SqlSession batchSqlSession = sqlSessionBatch()) {
             for (Resource entity : entityList) {
